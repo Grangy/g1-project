@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Menu from "./components/Menu";
 import Slider from "./components/Slider";
 import Main from "./components/Main";
@@ -14,15 +14,18 @@ export default function Home() {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-    if (isMenuOpen) {
-      document.body.style.overflow = "auto";
-    } else {
-      document.body.style.overflow = "hidden";
-    }
   };
 
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [isMenuOpen]);
+
   return (
-    <div className={`dark:bg-custom-dark-gray min-h-screen ${isMenuOpen ? 'backdrop-blur-lg' : ''}`}>
+    <div className={`dark:bg-custom-dark-gray min-h-screen`}>
       <Menu isOpen={isMenuOpen} toggleMenu={toggleMenu} />
       <div className={isMenuOpen ? 'blur-sm pointer-events-none' : ''}>
         <Slider /> {/* Этот блок загружается сразу */}
