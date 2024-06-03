@@ -1,14 +1,39 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Transition } from '@headlessui/react';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
 import Image from 'next/image';
 
 const Menu = ({ isOpen, toggleMenu }: { isOpen: boolean; toggleMenu: () => void; }) => {
+  const [isScrolledUp, setIsScrolledUp] = useState(true);
+  const [lastScrollTop, setLastScrollTop] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+      if (scrollTop < lastScrollTop) {
+        // прокрутка вверх
+        setIsScrolledUp(true);
+      } else {
+        // прокрутка вниз
+        setIsScrolledUp(false);
+      }
+
+      setLastScrollTop(scrollTop <= 0 ? 0 : scrollTop);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [lastScrollTop]);
+
   return (
-    <header className="absolute top-0 left-0 right-0 w-full bg-white/30 dark:bg-gray-900/30 backdrop-blur shadow z-50">
+    <header className={`fixed top-0 left-0 right-0 w-full bg-white/30 dark:bg-gray-900/30 backdrop-blur shadow z-50 transition-transform duration-300 ${isScrolledUp ? 'translate-y-0' : '-translate-y-full'}`}>
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
         <div className="flex items-center h-full">
           <Image
@@ -18,6 +43,7 @@ const Menu = ({ isOpen, toggleMenu }: { isOpen: boolean; toggleMenu: () => void;
             width={160}
             height={50}
             objectFit="contain"
+            className="animate-pulse"
           />
         </div>
         <nav className="flex justify-between items-center py-8 px-4 md:px-8">

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, ReactNode, useState } from 'react';
+import React, { useRef, ReactNode, useState, useEffect } from 'react';
 
 interface SwipeTeamProps {
   children: ReactNode;
@@ -12,10 +12,31 @@ const SwipeTeam = ({ children }: SwipeTeamProps) => {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
 
+  useEffect(() => {
+    if (sliderRef.current) {
+      const slider = sliderRef.current;
+
+      const handleScroll = () => {
+        const childWidth = slider.clientWidth / 2;
+        const index = Math.round(slider.scrollLeft / childWidth);
+        slider.scrollTo({
+          left: index * childWidth,
+          behavior: 'smooth',
+        });
+      };
+
+      slider.addEventListener('scroll', handleScroll);
+
+      return () => {
+        slider.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, []);
+
   const handleNext = () => {
     if (sliderRef.current) {
       sliderRef.current.scrollBy({
-        left: sliderRef.current.clientWidth,
+        left: sliderRef.current.clientWidth / 2,
         behavior: 'smooth',
       });
     }
@@ -24,7 +45,7 @@ const SwipeTeam = ({ children }: SwipeTeamProps) => {
   const handlePrev = () => {
     if (sliderRef.current) {
       sliderRef.current.scrollBy({
-        left: -sliderRef.current.clientWidth,
+        left: -sliderRef.current.clientWidth / 2,
         behavior: 'smooth',
       });
     }
@@ -43,7 +64,7 @@ const SwipeTeam = ({ children }: SwipeTeamProps) => {
     e.preventDefault();
     if (sliderRef.current) {
       const x = e.pageX - sliderRef.current.offsetLeft;
-      const walk = (x - startX) * 2; // Ускоряем прокрутку
+      const walk = (x - startX) * 2;
       sliderRef.current.scrollLeft = scrollLeft - walk;
     }
   };
@@ -64,7 +85,7 @@ const SwipeTeam = ({ children }: SwipeTeamProps) => {
     if (!isDragging) return;
     if (sliderRef.current) {
       const x = e.touches[0].pageX - sliderRef.current.offsetLeft;
-      const walk = (x - startX) * 2; // Ускоряем прокрутку
+      const walk = (x - startX) * 2;
       sliderRef.current.scrollLeft = scrollLeft - walk;
     }
   };
@@ -76,7 +97,7 @@ const SwipeTeam = ({ children }: SwipeTeamProps) => {
   return (
     <div className="relative">
       <div
-        className="overflow-hidden"
+        className="overflow-hidden scroll-container"
         ref={sliderRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -86,7 +107,7 @@ const SwipeTeam = ({ children }: SwipeTeamProps) => {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 snap-x">
           {children}
         </div>
       </div>

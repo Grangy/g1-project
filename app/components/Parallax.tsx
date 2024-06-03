@@ -10,7 +10,7 @@ interface ParallaxProps {
   offset?: number;
 }
 
-const Parallax = ({ children, className, offset = 20 }: ParallaxProps) => {
+const Parallax = ({ children, className, offset = 100 }: ParallaxProps) => { // Увеличен offset до 50
   const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -22,11 +22,12 @@ const Parallax = ({ children, className, offset = 20 }: ParallaxProps) => {
       className={classNames(
         'transform transition-all duration-1000 ease-in-out',
         {
-          [`opacity-0 translate-y-${offset}`]: !inView,
+          'opacity-0': !inView,
           'opacity-100 translate-y-0': inView,
         },
         className
       )}
+      style={{ transform: inView ? 'translateY(0)' : `translateY(${offset}px)` }} // Добавлен стиль transform для более плавного эффекта
     >
       {children}
     </div>
