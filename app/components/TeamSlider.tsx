@@ -16,7 +16,7 @@ const TeamSlider = () => {
       <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Наша команда</h2>
       <SwipeTeam>
         {trainers.map(trainer => (
-          <div key={trainer.id} className="w-full md:w-1/4 sm:w-1/2 flex-shrink-0 bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+          <div key={trainer.id} className="w-full sm:w-1/2 md:w-1/4 flex-shrink-0 bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
             <div className="relative pb-[177.78%]"> {/* 16:9 aspect ratio */}
               <Image
                 src={trainer.img}
@@ -31,7 +31,7 @@ const TeamSlider = () => {
             </div>
           </div>
         ))}
-        <div className="w-full md:w-1/4 sm:w-1/2 flex-shrink-0 flex items-center justify-center bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+        <div className="w-full sm:w-1/2 md:w-1/4 flex-shrink-0 flex items-center justify-center bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
           <a href="/trainers" className="text-gray-800 dark:text-white font-semibold">
             Показать всех
           </a>

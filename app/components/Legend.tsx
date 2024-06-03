@@ -24,14 +24,14 @@ const Legend = () => {
           </span>
         </button>
       </div>
-      <div className="w-full md:w-1/2 flex flex-col md:flex-row justify-end relative h-auto md:h-[20rem] mt-4 md:mt-0">
-        <Parallax offset={10} className="relative md:absolute md:right-0 md:top-0 md:-mr-4 mb-4 md:mb-0">
+      <div className="w-full md:w-1/2 flex flex-col md:flex-row justify-center md:justify-end relative h-auto md:h-[20rem] mt-4 md:mt-0">
+        <Parallax offset={10} className="relative md:absolute md:right-0 md:top-0 mb-4 md:mb-0 flex justify-center">
           <Image src="/img/legend1.png" alt="Legend 1" width={300} height={300} />
         </Parallax>
-        <Parallax offset={20} className="relative md:absolute md:left-20 md:top-20 mb-4 md:mb-0">
+        <Parallax offset={20} className="relative md:absolute md:left-20 md:top-20 mb-4 md:mb-0 flex justify-center">
           <Image src="/img/legend2.png" alt="Legend 2" width={300} height={300} />
         </Parallax>
-        <Parallax offset={30} className="relative md:absolute md:right-10 md:top-60 md:-mr-4">
+        <Parallax offset={30} className="relative md:absolute md:right-10 md:top-60 md:-mr-4 flex justify-center">
           <Image src="/img/legend3.png" alt="Legend 3" width={300} height={500} />
         </Parallax>
       </div>
