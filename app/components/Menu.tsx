@@ -1,3 +1,4 @@
+// app/components/Menu.tsx
 'use client';
 
 import Link from 'next/link';
@@ -5,20 +6,24 @@ import { useState, useEffect } from 'react';
 import { Transition } from '@headlessui/react';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
 import Image from 'next/image';
+import useSWR from 'swr';
+import axios from 'axios';
+
+const fetcher = (url: string) => axios.get(url).then(res => res.data);
 
 const Menu = ({ isOpen, toggleMenu }: { isOpen: boolean; toggleMenu: () => void; }) => {
   const [isScrolledUp, setIsScrolledUp] = useState(true);
   const [lastScrollTop, setLastScrollTop] = useState(0);
+
+  const { data: menuItems, mutate } = useSWR('/api/menu', fetcher);
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
       if (scrollTop < lastScrollTop) {
-        // прокрутка вверх
         setIsScrolledUp(true);
       } else {
-        // прокрутка вниз
         setIsScrolledUp(false);
       }
 
@@ -62,18 +67,11 @@ const Menu = ({ isOpen, toggleMenu }: { isOpen: boolean; toggleMenu: () => void;
               </button>
             </div>
             <ul className="hidden md:flex space-x-4">
-              <li>
-                <Link href="/" className="text-gray-600 dark:text-white hover:text-gray-800 dark:hover:text-white">Главная</Link>
-              </li>
-              <li>
-                <Link href="/about" className="text-gray-600 dark:text-white hover:text-gray-800 dark:hover:text-white">О нас</Link>
-              </li>
-              <li>
-                <Link href="/services" className="text-gray-600 dark:text-white hover:text-gray-800 dark:hover:text-white">Сервисы</Link>
-              </li>
-              <li>
-                <Link href="/contacts" className="text-gray-600 dark:text-white hover:text-gray-800 dark:hover:text-white">Контакты</Link>
-              </li>
+              {menuItems && menuItems.map((item: any) => (
+                <li key={item._id}>
+                  <Link href={item.href} className="text-gray-600 dark:text-white hover:text-gray-800 dark:hover:text-white">{item.title}</Link>
+                </li>
+              ))}
             </ul>
           </nav>
         </div>
@@ -97,18 +95,11 @@ const Menu = ({ isOpen, toggleMenu }: { isOpen: boolean; toggleMenu: () => void;
             <XIcon className="w-8 h-8" />
           </button>
           <ul className="flex flex-col items-center space-y-6 text-white text-xl">
-            <li>
-              <Link href="/" onClick={toggleMenu} className="hover:text-gray-300">Главная</Link>
-            </li>
-            <li>
-              <Link href="/about" onClick={toggleMenu} className="hover:text-gray-300">О нас</Link>
-            </li>
-            <li>
-              <Link href="/services" onClick={toggleMenu} className="hover:text-gray-300">Сервисы</Link>
-            </li>
-            <li>
-              <Link href="/contacts" onClick={toggleMenu} className="hover:text-gray-300">Контакты</Link>
-            </li>
+            {menuItems && menuItems.map((item: any) => (
+              <li key={item._id}>
+                <Link href={item.href} onClick={toggleMenu} className="hover:text-gray-300">{item.title}</Link>
+              </li>
+            ))}
           </ul>
         </div>
       </Transition>
