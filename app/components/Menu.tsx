@@ -1,4 +1,3 @@
-// app/components/Menu.tsx
 'use client';
 
 import Link from 'next/link';
@@ -39,7 +38,7 @@ const Menu = ({ isOpen, toggleMenu }: { isOpen: boolean; toggleMenu: () => void;
 
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 w-full bg-white/30 dark:bg-gray-900/30 backdrop-blur shadow z-50 transition-transform duration-300 ${isScrolledUp ? 'translate-y-0' : '-translate-y-full'}`}>
+      <header className={`fixed top-0 left-0 right-0 w-full bg-custom-gray dark:bg-gray-900/30 backdrop-blur shadow z-50 transition-transform duration-300 ${isScrolledUp ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center h-full justify-left md:justify-start w-full md:w-auto">
             <Image

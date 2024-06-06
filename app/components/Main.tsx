@@ -1,5 +1,5 @@
-// components/Main.tsx
 import Image from 'next/image';
+import Link from 'next/link';
 
 const Main = () => {
   return (
@@ -10,7 +10,7 @@ const Main = () => {
 
       {/* Категории с изображениями */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-        <div className="relative aspect-w-16 aspect-h-9 min-h-[300px] group">
+        <Link href="/group" className="relative aspect-w-16 aspect-h-9 min-h-[300px] group block">
           <Image
             src="/img/main/1.png"
             alt="Групповые занятия"
@@ -19,21 +19,21 @@ const Main = () => {
           />
           <div className="absolute inset-0 bg-black opacity-50 group-hover:opacity-0 transition-opacity duration-200"></div>
           <div className="absolute bottom-0 left-0 bg-red-800/75 text-white p-4">Групповые занятия</div>
-        </div>
-        <div className="relative aspect-w-16 aspect-h-9 min-h-[300px] group">
+        </Link>
+        <Link href="/personal" className="relative aspect-w-16 aspect-h-9 min-h-[300px] group block">
           <Image
             src="/img/main/2.png"
-            alt="Групповые занятия"
+            alt="Персональные тренировки"
             layout="fill"
             objectFit="cover"
           />
           <div className="absolute inset-0 bg-black opacity-50 group-hover:opacity-0 transition-opacity duration-200"></div>
           <div className="absolute bottom-0 left-0 bg-red-800/75 text-white p-4">Персональные тренировки</div>
-        </div>
+        </Link>
         <div className="relative aspect-w-16 aspect-h-9 min-h-[300px] group">
           <Image
             src="/img/main/3.png"
-            alt="Групповые занятия"
+            alt="KROSSFIT"
             layout="fill"
             objectFit="cover"
           />
@@ -43,7 +43,7 @@ const Main = () => {
         <div className="relative aspect-w-16 aspect-h-9 min-h-[300px] group">
           <Image
             src="/img/main/4.png"
-            alt="Групповые занятия"
+            alt="CYCLE"
             layout="fill"
             objectFit="cover"
           />

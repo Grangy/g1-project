@@ -1,7 +1,8 @@
+// app/ClientLayout.tsx
 "use client";
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Menu from "./components/Menu";
-import { ClipLoader } from "react-spinners";
 import useSWR from 'swr';
 import axios from 'axios';
 
@@ -37,16 +38,22 @@ export default function ClientLayout({
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <ClipLoader size={150} color="#3498db" cssOverride={{ border: '5px solid #3498db', borderRadius: '50%' }} />
+      <div className="flex items-center justify-center min-h-screen bg-black">
+        <Image
+          src="/img/logo/logo.png"
+          alt="gagar1n Logo"
+          width={100}
+          height={100}
+          className="spin pulse-fast"
+        />
       </div>
     );
   }
 
   if (menuError || trainerError) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p>Error loading data</p>
+      <div className="flex items-center justify-center min-h-screen bg-black">
+        <p className="text-white">Error loading data</p>
       </div>
     );
   }
