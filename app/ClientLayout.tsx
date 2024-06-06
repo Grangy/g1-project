@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Menu from "./components/Menu";
 import { ClipLoader } from "react-spinners";
 import useSWR from 'swr';
@@ -16,12 +16,19 @@ export default function ClientLayout({
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
     }
-  };
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isMenuOpen]);
 
   const { data: menuData, error: menuError } = useSWR('/api/menu', fetcher);
   const { data: trainerData, error: trainerError } = useSWR('/api/trainers', fetcher);
