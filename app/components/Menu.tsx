@@ -1,45 +1,34 @@
+// app/components/Menu.tsx
 'use client';
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Transition } from '@headlessui/react';
-import { MenuIcon, XIcon } from '@heroicons/react/outline';
+import { MenuIcon, XIcon, PhoneIcon } from '@heroicons/react/outline';
 import Image from 'next/image';
 import useSWR from 'swr';
 import axios from 'axios';
+import { FaTelegramPlane } from 'react-icons/fa';
+import Popup from './Popup';  // Импортируем новый компонент
 
 const fetcher = (url: string) => axios.get(url).then(res => res.data);
 
 const Menu = ({ isOpen, toggleMenu }: { isOpen: boolean; toggleMenu: () => void; }) => {
-  const [isScrolledUp, setIsScrolledUp] = useState(true);
-  const [lastScrollTop, setLastScrollTop] = useState(0);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const openPopup = () => {
+    setIsPopupOpen(true);
+    if (isOpen) toggleMenu(); // Закрыть меню, если оно открыто
+  };
+
+  const closePopup = () => setIsPopupOpen(false);
 
   const { data: menuItems, mutate } = useSWR('/api/menu', fetcher);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-      if (scrollTop < lastScrollTop) {
-        setIsScrolledUp(true);
-      } else {
-        setIsScrolledUp(false);
-      }
-
-      setLastScrollTop(scrollTop <= 0 ? 0 : scrollTop);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [lastScrollTop]);
-
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 w-full bg-custom-gray dark:bg-gray-900/30 backdrop-blur shadow z-50 transition-transform duration-300 ${isScrolledUp ? 'translate-y-0' : '-translate-y-full'}`}>
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
+      <header className={`fixed top-0 left-0 right-0 w-full bg-custom-gray dark:bg-gray-900/30 backdrop-blur shadow z-50 transition-transform duration-300`}>
+        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between py-6">
           <div className="flex items-center h-full justify-left md:justify-start w-full md:w-auto">
             <Image
               src="/img/logo/logo.png"
@@ -51,28 +40,37 @@ const Menu = ({ isOpen, toggleMenu }: { isOpen: boolean; toggleMenu: () => void;
               className="animate-pulse"
             />
           </div>
-          <nav className="flex justify-between items-center py-8 px-4 md:px-8">
-            <div className="md:hidden">
-              <button
-                onClick={toggleMenu}
-                className="text-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500 rounded-md"
-                aria-label="Toggle menu"
-              >
-                {isOpen ? (
-                  <XIcon className="w-6 h-6" />
-                ) : (
-                  <MenuIcon className="w-6 h-6" />
-                )}
-              </button>
-            </div>
-            <ul className="hidden md:flex space-x-4">
+          <div className="hidden md:flex items-center space-x-6">
+            <nav className="flex space-x-4">
               {menuItems && menuItems.map((item: any) => (
-                <li key={item._id}>
-                  <Link href={item.href} className="text-gray-600 dark:text-white hover:text-gray-800 dark:hover:text-white">{item.title}</Link>
-                </li>
+                <Link key={item._id} href={item.href} className="text-white hover:text-gray-300">
+                  {item.title}
+                </Link>
               ))}
-            </ul>
-          </nav>
+            </nav>
+            <button onClick={openPopup} className="px-4 py-2 border border-white text-white rounded hover:bg-white hover:text-custom-red transition">
+              Оставить заявку
+            </button>
+            <a href="tel:+1234567890" className="text-white hover:text-gray-300">
+              <PhoneIcon className="h-6 w-6" />
+            </a>
+            <a href="https://telegram.me/yourchannel" className="text-white hover:text-gray-300">
+              <FaTelegramPlane className="h-6 w-6" />
+            </a>
+          </div>
+          <div className="md:hidden">
+            <button
+              onClick={toggleMenu}
+              className="text-white focus:outline-none focus:ring-2 focus:ring-gray-500 rounded-md"
+              aria-label="Toggle menu"
+            >
+              {isOpen ? (
+                <XIcon className="w-6 h-6" />
+              ) : (
+                <MenuIcon className="w-6 h-6" />
+              )}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -94,14 +92,36 @@ const Menu = ({ isOpen, toggleMenu }: { isOpen: boolean; toggleMenu: () => void;
             <XIcon className="w-8 h-8" />
           </button>
           <ul className="flex flex-col items-center space-y-6 text-white text-xl">
+            
             {menuItems && menuItems.map((item: any) => (
               <li key={item._id}>
-                <Link href={item.href} onClick={toggleMenu} className="hover:text-gray-300">{item.title}</Link>
+                <Link href={item.href} onClick={toggleMenu} className="hover:text-gray-300">
+                  {item.title}
+                </Link>
               </li>
             ))}
+            <li>
+              <button onClick={openPopup} className="px-4 py-2 border border-white text-white rounded hover:bg-white hover:text-custom-red transition mb-10">
+                Оставить заявку
+              </button>
+            </li>
+            <li>
+              <a href="tel:+1234567890" className="flex items-center space-x-2">
+                <PhoneIcon className="h-6 w-6" />
+                <span className='text-sm'>Позвонить</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://telegram.me/yourchannel" className="flex items-center space-x-2">
+                <FaTelegramPlane className="h-6 w-6" />
+                <span className='text-sm'>Наш Telegram</span>
+              </a>
+            </li>
           </ul>
         </div>
       </Transition>
+
+      <Popup isOpen={isPopupOpen} closeModal={closePopup} />
     </>
   );
 };
