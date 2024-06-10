@@ -2,23 +2,23 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Transition } from '@headlessui/react';
 import { MenuIcon, XIcon, PhoneIcon } from '@heroicons/react/outline';
 import Image from 'next/image';
 import useSWR from 'swr';
 import axios from 'axios';
 import { FaTelegramPlane } from 'react-icons/fa';
-import Popup from './Popup';  // Импортируем новый компонент
+import Popup from './Popup';  // Import the Popup component
 
 const fetcher = (url: string) => axios.get(url).then(res => res.data);
 
-const Menu = ({ isOpen, toggleMenu }: { isOpen: boolean; toggleMenu: () => void; }) => {
+const Menu = ({ isOpen, toggleMenu, isGFood = false, onLogoLoad }: { isOpen: boolean; toggleMenu: () => void; isGFood?: boolean; onLogoLoad: () => void; }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const openPopup = () => {
     setIsPopupOpen(true);
-    if (isOpen) toggleMenu(); // Закрыть меню, если оно открыто
+    if (isOpen) toggleMenu(); // Close the menu if it is open
   };
 
   const closePopup = () => setIsPopupOpen(false);
@@ -31,22 +31,24 @@ const Menu = ({ isOpen, toggleMenu }: { isOpen: boolean; toggleMenu: () => void;
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between py-6">
           <div className="flex items-center h-full justify-left md:justify-start w-full md:w-auto">
             <Image
-              src="/img/logo/logo.png"
-              alt="gagar1n Logo"
+              src={isGFood ? '/img/logo/logo2.png' : '/img/logo/logo.png'}
+              alt="Logo"
               layout="fixed"
               width={50}
               height={50}
               objectFit="contain"
               className="animate-pulse"
+              onLoadingComplete={onLogoLoad}
             />
           </div>
           <div className="hidden md:flex items-center space-x-6">
             <nav className="flex space-x-4">
-              {menuItems && menuItems.map((item: any) => (
-                <Link key={item._id} href={item.href} className="text-white hover:text-gray-300">
-                  {item.title}
-                </Link>
-              ))}
+              <Link href="/" className="text-white hover:text-gray-300">
+                Home
+              </Link>
+              <Link href="/gfood" className="text-white hover:text-gray-300">
+                GFood
+              </Link>
             </nav>
             <button onClick={openPopup} className="px-4 py-2 border border-white text-white rounded hover:bg-white hover:text-custom-red transition">
               Оставить заявку
@@ -92,14 +94,16 @@ const Menu = ({ isOpen, toggleMenu }: { isOpen: boolean; toggleMenu: () => void;
             <XIcon className="w-8 h-8" />
           </button>
           <ul className="flex flex-col items-center space-y-6 text-white text-xl">
-            
-            {menuItems && menuItems.map((item: any) => (
-              <li key={item._id}>
-                <Link href={item.href} onClick={toggleMenu} className="hover:text-gray-300">
-                  {item.title}
-                </Link>
-              </li>
-            ))}
+            <li>
+              <Link href="/" onClick={toggleMenu} className="hover:text-gray-300">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link href="/gfood" onClick={toggleMenu} className="hover:text-gray-300">
+                GFood
+              </Link>
+            </li>
             <li>
               <button onClick={openPopup} className="px-4 py-2 border border-white text-white rounded hover:bg-white hover:text-custom-red transition mb-10">
                 Оставить заявку
