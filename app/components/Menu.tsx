@@ -13,7 +13,7 @@ import Popup from './Popup';  // Import the Popup component
 
 const fetcher = (url: string) => axios.get(url).then(res => res.data);
 
-const Menu = ({ isOpen, toggleMenu, isGFood = false, onLogoLoad }: { isOpen: boolean; toggleMenu: () => void; isGFood?: boolean; onLogoLoad: () => void; }) => {
+const Menu = ({ isOpen, toggleMenu, isGFood = false }: { isOpen: boolean; toggleMenu: () => void; isGFood?: boolean; }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const openPopup = () => {
@@ -31,14 +31,13 @@ const Menu = ({ isOpen, toggleMenu, isGFood = false, onLogoLoad }: { isOpen: boo
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between py-6">
           <div className="flex items-center h-full justify-left md:justify-start w-full md:w-auto">
             <Image
-              src={isGFood ? '/img/logo/logo2.png' : '/img/logo/logo.png'}
+              src={isGFood ? '/img/logo/logo2.png' : '/img/logo/logo1.png'}
               alt="Logo"
               layout="fixed"
               width={50}
               height={50}
               objectFit="contain"
               className="animate-pulse"
-              onLoadingComplete={onLogoLoad}
             />
           </div>
           <div className="hidden md:flex items-center space-x-6">
