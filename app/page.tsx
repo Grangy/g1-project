@@ -1,3 +1,4 @@
+// g1-project\app\page.tsx
 "use client";
 import Slider from "./components/Slider";
 import Main from "./components/Main";
@@ -6,13 +7,19 @@ import TeamSlider from "./components/TeamSlider";
 import Pricing from "./components/Pricing";
 import ContactForm from "./components/ContactForm";
 import Parallax from "./components/Parallax";
+import { getRouteConfig } from './utils/getRouteConfig';
+import { usePathname } from 'next/navigation';
+import { routesConfig } from './config/routesConfig';
 
 export default function Home() {
+  const pathname = usePathname();
+  const routeConfig = getRouteConfig(pathname) || routesConfig["/"];
+
   return (
     <div className="dark:bg-custom-dark-gray min-h-screen">
-      <Slider /> {/* Этот блок загружается сразу */}
+      <Slider routeConfig={routeConfig} />
       <Parallax>
-        <Main />
+        <Main routeConfig={routeConfig} />
       </Parallax>
       <Parallax>
         <Legend />

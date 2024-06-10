@@ -13,7 +13,13 @@ import Popup from './Popup';  // Import the Popup component
 
 const fetcher = (url: string) => axios.get(url).then(res => res.data);
 
-const Menu = ({ isOpen, toggleMenu, isGFood = false }: { isOpen: boolean; toggleMenu: () => void; isGFood?: boolean; }) => {
+const menuItems = [
+  { href: "/", label: "Home" },
+  { href: "/gfood", label: "GFood" },
+  { href: "/grelka", label: "Grelka" }
+];
+
+const Menu = ({ isOpen, toggleMenu, routeConfig }: { isOpen: boolean; toggleMenu: () => void; routeConfig: any; }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const openPopup = () => {
@@ -23,7 +29,7 @@ const Menu = ({ isOpen, toggleMenu, isGFood = false }: { isOpen: boolean; toggle
 
   const closePopup = () => setIsPopupOpen(false);
 
-  const { data: menuItems, mutate } = useSWR('/api/menu', fetcher);
+  const { data: menuData, mutate } = useSWR('/api/menu', fetcher);
 
   return (
     <>
@@ -31,7 +37,7 @@ const Menu = ({ isOpen, toggleMenu, isGFood = false }: { isOpen: boolean; toggle
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between py-6">
           <div className="flex items-center h-full justify-left md:justify-start w-full md:w-auto">
             <Image
-              src={isGFood ? '/img/logo/logo2.png' : '/img/logo/logo1.png'}
+              src={routeConfig.logo}
               alt="Logo"
               layout="fixed"
               width={50}
@@ -42,12 +48,11 @@ const Menu = ({ isOpen, toggleMenu, isGFood = false }: { isOpen: boolean; toggle
           </div>
           <div className="hidden md:flex items-center space-x-6">
             <nav className="flex space-x-4">
-              <Link href="/" className="text-white hover:text-gray-300">
-                Home
-              </Link>
-              <Link href="/gfood" className="text-white hover:text-gray-300">
-                GFood
-              </Link>
+              {menuItems.map((item) => (
+                <Link key={item.href} href={item.href} className="text-white hover:text-gray-300">
+                  {item.label}
+                </Link>
+              ))}
             </nav>
             <button onClick={openPopup} className="px-4 py-2 border border-white text-white rounded hover:bg-white hover:text-custom-red transition">
               Оставить заявку
@@ -93,16 +98,13 @@ const Menu = ({ isOpen, toggleMenu, isGFood = false }: { isOpen: boolean; toggle
             <XIcon className="w-8 h-8" />
           </button>
           <ul className="flex flex-col items-center space-y-6 text-white text-xl">
-            <li>
-              <Link href="/" onClick={toggleMenu} className="hover:text-gray-300">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link href="/gfood" onClick={toggleMenu} className="hover:text-gray-300">
-                GFood
-              </Link>
-            </li>
+            {menuItems.map((item) => (
+              <li key={item.href}>
+                <Link href={item.href} onClick={toggleMenu} className="hover:text-gray-300">
+                  {item.label}
+                </Link>
+              </li>
+            ))}
             <li>
               <button onClick={openPopup} className="px-4 py-2 border border-white text-white rounded hover:bg-white hover:text-custom-red transition mb-10">
                 Оставить заявку

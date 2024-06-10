@@ -11,7 +11,7 @@ import { routesConfig } from '../config/routesConfig';
 
 export default function GFoodHome() {
   const pathname = usePathname();
-  const routeConfig = getRouteConfig(pathname) || routesConfig["/gfood"];
+  const routeConfig = getRouteConfig(pathname) || routesConfig["/grelka"];
 
   return (
     <div className="min-h-screen">

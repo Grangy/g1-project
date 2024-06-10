@@ -6,6 +6,9 @@ import Menu from "./components/Menu";
 import useSWR from 'swr';
 import axios from 'axios';
 import { usePathname } from 'next/navigation';
+import { getRouteConfig } from './utils/getRouteConfig';
+import { routesConfig } from './config/routesConfig';
+import React from 'react';
 
 const fetcher = (url: string) => axios.get(url).then(res => res.data);
 
@@ -16,6 +19,7 @@ export default function ClientLayout({
 }>) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  const routeConfig = getRouteConfig(pathname) || routesConfig["/"];
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -34,13 +38,11 @@ export default function ClientLayout({
   }, [isMenuOpen]);
 
   const { data: menuData, error: menuError, isValidating: isMenuValidating } = useSWR('/api/menu', fetcher, {
-    fallbackData: [],
     onError: (error) => {
       console.error("Error loading menu data:", error);
     },
   });
   const { data: trainerData, error: trainerError, isValidating: isTrainerValidating } = useSWR('/api/trainers', fetcher, {
-    fallbackData: [],
     onError: (error) => {
       console.error("Error loading trainer data:", error);
     },
@@ -48,24 +50,22 @@ export default function ClientLayout({
 
   const loading = isMenuValidating || isTrainerValidating;
 
-  // Determine if the current route is related to GFood based on the pathname
-  const isGFood = pathname.includes("/gfood");
-
   useEffect(() => {
-    // Log the current state of loading and errors
+    console.log("Pathname:", pathname);
+    console.log("Route Config:", routeConfig);
     console.log("Loading state:", loading);
     console.log("Menu data:", menuData);
     console.log("Trainer data:", trainerData);
     console.log("Menu error:", menuError);
     console.log("Trainer error:", trainerError);
-  }, [loading, menuData, trainerData, menuError, trainerError]);
+  }, [pathname, routeConfig, loading, menuData, trainerData, menuError, trainerError]);
 
   if (loading) {
     console.log("Loading...");
     return (
       <div className="flex items-center justify-center min-h-screen bg-black">
         <Image
-          src="/img/logo/logo1.png"
+          src={routeConfig.logo}
           alt="gagar1n Logo"
           width={100}
           height={100}
@@ -75,15 +75,11 @@ export default function ClientLayout({
     );
   }
 
-  if (menuError || trainerError) {
-    console.error("Error loading data. Menu error:", menuError, "Trainer error:", trainerError);
-  }
-
   return (
     <>
-      <Menu isOpen={isMenuOpen} toggleMenu={toggleMenu} isGFood={isGFood} />
+      <Menu isOpen={isMenuOpen} toggleMenu={toggleMenu} routeConfig={routeConfig} />
       <div className={isMenuOpen ? 'blur-sm pointer-events-none' : ''}>
-        {children}
+        {React.cloneElement(children as React.ReactElement, { routeConfig })}  {/* Pass routeConfig to children */}
       </div>
     </>
   );

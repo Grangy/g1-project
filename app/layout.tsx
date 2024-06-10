@@ -1,4 +1,4 @@
-// app/layout.tsx
+// g1-project\app\layout.tsx
 import ClientLayout from './ClientLayout';
 import "./globals.css";
 
